@@ -14,23 +14,6 @@
         name: wildfly
         chart_ref: bitnami/wildfly
         release_namespace: wildfly
+        create_namespace: true
         values_files:
           - values.yaml
-
-    - name: 03-Ensure a wildfly Service
-      kubernetes.core.k8s:
-        state: present
-        definition:
-          apiVersion: v1
-          kind: Service
-          metadata:
-            name: wildfly
-            namespace: wildfly
-          spec:
-            type: NodePort
-            ports:
-            - port: 80
-              nodePort: 32200
-              targetPort: http
-            selector:
-              app.kubernetes.io/name: wildfly
