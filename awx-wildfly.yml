@@ -1,0 +1,38 @@
+---
+- hosts: localhost
+  gather_facts: false
+  connection: local
+
+  tasks:
+    - name: 01-Create a k8s namespace
+      kubernetes.core.k8s:
+        name: wildfly
+        api_version: v1
+        kind: Namespace
+        state: present
+
+    - name: 02-Deploy Wildfly chart using values files on target
+      kubernetes.core.helm:
+        name: wildfly
+        chart_ref: bitnami/wildfly
+        release_namespace: wildfly
+        values_files:
+          - values.yaml
+
+    - name: 03-Ensure a wildfly Service
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: wildfly
+            namespace: wildfly
+          spec:
+            type: NodePort
+            ports:
+            - port: 80
+              nodePort: 32200
+              targetPort: http
+            selector:
+              app.kubernetes.io/name: wildfly
