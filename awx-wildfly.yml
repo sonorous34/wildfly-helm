@@ -4,12 +4,10 @@
   connection: local
 
   tasks:
-    - name: 01-Create a k8s namespace
-      kubernetes.core.k8s:
-        name: wildfly
-        api_version: v1
-        kind: Namespace
-        state: present
+    - name: 01-Add bitnami chart repo
+      kubernetes.core.helm_repository:
+        name: bitnami
+        repo_url: "https://charts.bitnami.com/bitnami"
 
     - name: 02-Deploy Wildfly chart using values files on target
       kubernetes.core.helm:
