@@ -1,7 +1,12 @@
 ---
-- hosts: localhost
+- name: Wildfly Playbook
+  hosts: localhost
   gather_facts: false
   connection: local
+  vars:
+    controller_validate_certs: false
+  collections:
+    - kubernetes.core
 
   tasks:
     - name: 01-Add bitnami chart repo
